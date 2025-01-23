@@ -1,57 +1,38 @@
-"""Django settings for blogit project."""
+"""Django settings for Blogit API."""
 
 import os
-from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret key
+# Secret Key
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# Django settings
+# Debug mode
 DEBUG = 'DEV' in os.environ
 
+# Allowed Hosts
 ALLOWED_HOSTS = [
-    '.gitpod.io',
-    '127.0.0.1',
+    os.getenv('ALLOWED_HOST'),
     'localhost',
-    '.herokuapp.com',
-    '.codeinstitute-ide.net',
+    '127.0.0.1',
 ]
 
-# CORS and CSRF
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [
-        os.getenv('CLIENT_ORIGIN'),
-        os.getenv('CLIENT_ORIGIN_DEV'),
-    ]
-else:
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        r'^https://.*\.codeinstitute-ide\.net$',
-    ]
-CORS_ALLOWED_ORIGINS = ['https://*.herokuapp.com']
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.codeinstitute-ide.net',
-    'https://*.herokuapp.com',
-]
-
-# Application definition
+# Installed Applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
     'rest_framework',
@@ -66,9 +47,9 @@ INSTALLED_APPS = [
     'profiles',
 ]
 
-
 SITE_ID = 1
 
+# Middleware
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -81,8 +62,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+# URL Configuration
 ROOT_URLCONF = 'blogit.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -99,9 +82,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI Application
 WSGI_APPLICATION = 'blogit.wsgi.application'
 
-# Database
+# Database Configuration
 if 'DEV' in os.environ:
     DATABASES = {
         'default': {
@@ -113,22 +97,6 @@ if 'DEV' in os.environ:
 else:
     DATABASES = {'default': dj_database_url.parse(os.getenv('DATABASE_URL'))}
     print('Production database')
-
-# Password validation
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
 
 # Authentication and REST Framework
 REST_FRAMEWORK = {
@@ -158,19 +126,37 @@ REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'blogit.serializers.CurrentUserSerializer',
 }
 
-# Internationalization
+# CORS and CSRF
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [
+        os.getenv('CLIENT_ORIGIN'),
+        os.getenv('CLIENT_ORIGIN_DEV'),
+    ]
+else:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r'^https://.*\.codeinstitute-ide\.net$',
+    ]
+# Append Heroku origin to the list
+CORS_ALLOWED_ORIGINS.append('https://*.herokuapp.com')
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.codeinstitute-ide.net',
+    'https://*.herokuapp.com',
+]
+
+# Static and Media Files
+STATIC_URL = '/static/'
+CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.getenv('CLOUDINARY_URL')}
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Internationalization and Localization
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Europe/Stockholm'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
+# Django-specific Settings
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
