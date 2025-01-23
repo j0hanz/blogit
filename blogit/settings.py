@@ -1,6 +1,7 @@
 """Django settings for blogit project."""
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -26,6 +27,10 @@ ALLOWED_HOSTS = [
 ]
 
 # CORS settings
+CORS_ALLOWED_ORIGINS = ['*']
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS = [
         os.getenv('CLIENT_ORIGIN'),
@@ -36,15 +41,8 @@ else:
         r'^https://.*\.codeinstitute-ide\.net$',
     ]
 
-CORS_ALLOWED_ORIGINS = ['https://*.herokuapp.com']
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-
 # CSRF settings
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.codeinstitute-ide.net',
-    'https://*.herokuapp.com',
-]
+CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -54,6 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'dj_rest_auth',
     'profiles',
 ]
 
@@ -102,7 +102,6 @@ else:
     DATABASES = {'default': dj_database_url.parse(os.getenv('DATABASE_URL'))}
     print('Production database')
 
-
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,6 +117,38 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# REST framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# REST Auth settings
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_SECURE': False,
+    'JWT_AUTH_HTTPONLY': True,
+    'JWT_AUTH_COOKIE': 'my-app-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+    'JWT_AUTH_SAMESITE': 'Lax',
+    'USER_DETAILS_SERIALIZER': 'blogit.serializers.CurrentUserSerializer',
+}
+
+# JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
