@@ -50,16 +50,9 @@ target-version = "py312"
 
 [tool.ruff.lint]
 ignore = [
-    "C415",
     "Q000",
     "Q001",
     "Q003",
-    "F401",
-    "DJ001",
-    "PLR",
-    "PIE796",
-    "W191",
-    "W505",
 ]
 select = [
     "C",
