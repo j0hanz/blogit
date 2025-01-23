@@ -8,7 +8,9 @@ MAX_BIO_LENGTH = 500
 class ProfileSerializer(serializers.ModelSerializer):
     """Serializer for the Profile model."""
 
-    image_url = serializers.ReadOnlyField()
+    profile_picture_url = serializers.ReadOnlyField(
+        source='profile_picture.url'
+    )
 
     class Meta:
         model = Profile
@@ -16,8 +18,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id',
             'owner',
             'name',
-            'image_url',
-            'image',
+            'profile_picture_url',
+            'profile_picture',
             'bio',
             'website',
             'created_at',
