@@ -10,7 +10,9 @@ class Profile(models.Model):
 
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
-    profile_picture = CloudinaryField('image', default='nobody_nrbk5n', blank=True)
+    profile_picture = CloudinaryField(
+        'image', default='nobody_nrbk5n', blank=True
+    )
     bio = models.TextField(blank=True)
     website = models.URLField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
