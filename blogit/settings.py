@@ -32,9 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
     'cloudinary',
+    'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -127,15 +126,18 @@ REST_AUTH = {
 }
 
 # CORS and CSRF
+CORS_ALLOWED_ORIGINS = []
+
 if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [
+    CORS_ALLOWED_ORIGINS.extend([
         os.getenv('CLIENT_ORIGIN'),
         os.getenv('CLIENT_ORIGIN_DEV'),
-    ]
+    ])
 else:
     CORS_ALLOWED_ORIGIN_REGEXES = [
         r'^https://.*\.codeinstitute-ide\.net$',
     ]
+
 # Append Heroku origin to the list
 CORS_ALLOWED_ORIGINS.append('https://*.herokuapp.com')
 CORS_ALLOW_CREDENTIALS = True
