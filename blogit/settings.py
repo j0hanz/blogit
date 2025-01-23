@@ -9,31 +9,32 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Build paths inside the project
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Flag to detect if in development mode
+IS_DEV = 'DEV' in os.environ
 
 # Secret Key
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# Debug mode
-DEBUG = 'DEV' in os.environ
+DEBUG = IS_DEV
 
 # Allowed Hosts
-ALLOWED_HOSTS = [
-    os.getenv('ALLOWED_HOST'),
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if not IS_DEV:
+    prod_host = os.getenv('ALLOWED_HOST')
+    if prod_host:
+        ALLOWED_HOSTS.append(prod_host)
 
-# Installed Applications
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary',
     'django.contrib.staticfiles',
+    'cloudinary',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -61,7 +62,6 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-# URL Configuration
 ROOT_URLCONF = 'blogit.urls'
 
 # Templates
@@ -81,76 +81,60 @@ TEMPLATES = [
     },
 ]
 
-# WSGI Application
 WSGI_APPLICATION = 'blogit.wsgi.application'
 
 # Database Configuration
-if 'DEV' in os.environ:
+if IS_DEV:
+    print('Using SQLite database (Dev)')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print('SQLite database')
 else:
-    DATABASES = {'default': dj_database_url.parse(os.getenv('DATABASE_URL'))}
-    print('Production database')
+    print('Using Production database')
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL', ''))
+    }
 
-# Authentication and REST Framework
+# Authentication & REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        (
-            'rest_framework.authentication.SessionAuthentication'
-            if 'DEV' in os.environ
-            else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-        )
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 12,
     'DATETIME_FORMAT': '%a %d-%m-%Y %H:%M',
 }
-if 'DEV' not in os.environ:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        'rest_framework.renderers.JSONRenderer',
-    ]
 
 REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_SECURE': True,
-    'JWT_AUTH_HTTPONLY': False,
-    'JWT_AUTH_COOKIE': 'my-app-auth',
-    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
-    'JWT_AUTH_SAMESITE': 'None',
+    'USE_JWT': False,
     'USER_DETAILS_SERIALIZER': 'blogit.serializers.CurrentUserSerializer',
 }
 
 # CORS and CSRF
-CORS_ALLOWED_ORIGINS = []
-
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS.extend(
-        [
-            os.getenv('CLIENT_ORIGIN'),
-            os.getenv('CLIENT_ORIGIN_DEV'),
-        ]
-    )
-else:
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        r'^https://.*\.codeinstitute-ide\.net$',
-    ]
-
-# Append Heroku origin to the list
-CORS_ALLOWED_ORIGINS.append('https://*.herokuapp.com')
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_ALLOW_ALL = IS_DEV
+
+CORS_ALLOWED_ORIGINS = []
+if not IS_DEV:
+    client_origin = os.getenv('CLIENT_ORIGIN')
+    if client_origin:
+        CORS_ALLOWED_ORIGINS.append(client_origin)
+
+CORS_ALLOWED_ORIGINS.append('https://*.herokuapp.com')
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.codeinstitute-ide.net',
     'https://*.herokuapp.com',
 ]
 
-# Static and Media Files
+# Static & Media Files
 STATIC_URL = '/static/'
 CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.getenv('CLOUDINARY_URL')}
 MEDIA_URL = '/media/'
@@ -162,5 +146,5 @@ TIME_ZONE = 'Europe/Stockholm'
 USE_I18N = True
 USE_TZ = True
 
-# Django-specific Settings
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
