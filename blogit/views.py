@@ -1,8 +1,9 @@
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
-@api_view()
-def root_route(request):
+class RootRoute(APIView):
     """Root API endpoint that returns a welcome message."""
-    return Response({'message': 'Welcome to Blogit API!'})
+
+    def get(self, request):
+        return Response({'message': 'Welcome to Blogit API!'})
