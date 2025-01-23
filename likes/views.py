@@ -15,5 +15,5 @@ class LikeViewSet(
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-    def perform_create(self, serializer) -> None:
+    def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
