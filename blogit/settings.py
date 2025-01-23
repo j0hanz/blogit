@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 
+import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -135,10 +136,13 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Static & Media Files
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+)
+
 STATIC_URL = '/static/'
-CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.getenv('CLOUDINARY_URL')}
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Internationalization and Localization
 LANGUAGE_CODE = 'en-us'

@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -9,6 +10,7 @@ class Profile(models.Model):
 
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
+    image = CloudinaryField('image')
     bio = models.TextField(blank=True)
     website = models.URLField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,7 +24,9 @@ class Profile(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs) -> None:
-    """Function to create a profile once a user is created."""
+def create_or_update_profile(sender, instance, created, **kwargs) -> None:
+    """Function to create or update a profile once a user is created or updated."""
     if created:
         Profile.objects.create(owner=instance)
+    else:
+        instance.profile.save()
