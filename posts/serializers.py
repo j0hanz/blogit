@@ -29,9 +29,10 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_user_has_liked(self, obj):
         user = self.context['request'].user
-        if user.is_authenticated:
-            return Like.objects.filter(owner=user, post=obj).exists()
-        return False
+        return (
+            user.is_authenticated
+            and Like.objects.filter(owner=user, post=obj).exists()
+        )
 
     def validate_content(self, value):
         if not value and not self.initial_data.get('image'):
