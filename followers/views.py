@@ -1,4 +1,6 @@
+from django.db import IntegrityError
 from rest_framework import generics, permissions
+from rest_framework.exceptions import ValidationError
 
 from blogit.permissions import IsOwnerOrReadOnly
 
@@ -14,7 +16,10 @@ class FollowerList(generics.ListCreateAPIView):
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer) -> None:
-        serializer.save(owner=self.request.user)
+        try:
+            serializer.save(owner=self.request.user)
+        except IntegrityError:
+            raise ValidationError({'detail': 'possible duplicate'})
 
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
