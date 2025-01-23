@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 
 class Profile(models.Model):
-    """Represents a user's profile with personal information and an image."""
+    """User profile with personal info and image."""
 
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
@@ -24,10 +24,13 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f"{self.owner.username}'s profile"
 
+    def post_count(self):
+        return self.owner.posts.count()
+
 
 @receiver(post_save, sender=User)
 def create_or_update_profile(sender, instance, created, **kwargs) -> None:
-    """Function to create or update a profile once a user is created or updated."""
+    """Create or update profile when user is created or updated."""
     if created:
         Profile.objects.create(owner=instance)
     else:

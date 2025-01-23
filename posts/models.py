@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Post(models.Model):
-    """Represents a blog post with an image, content, and author."""
+    """Blog post with image and content."""
 
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts'

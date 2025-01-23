@@ -20,7 +20,7 @@ class PostListCreateView(generics.ListCreateAPIView):
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """Retrieve, update, and delete a single post. Only the owner can modify it."""
+    """Retrieve, update, or delete a post. Only the owner can modify it."""
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]

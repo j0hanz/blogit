@@ -6,7 +6,7 @@ from .models import Post
 
 
 def shortnaturaltime(value):
-    """Return a human-readable string representing the time delta from now to the given value."""
+    """Return a human-readable string for the time delta from now to the given value."""
     now = datetime.now(UTC)
     delta = now - value
 
@@ -20,7 +20,7 @@ def shortnaturaltime(value):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    """Serializer for the Post model."""
+    """Serializer for Post model."""
 
     human_readable_created_at = serializers.SerializerMethodField()
 
