@@ -129,10 +129,12 @@ REST_AUTH = {
 CORS_ALLOWED_ORIGINS = []
 
 if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS.extend([
-        os.getenv('CLIENT_ORIGIN'),
-        os.getenv('CLIENT_ORIGIN_DEV'),
-    ])
+    CORS_ALLOWED_ORIGINS.extend(
+        [
+            os.getenv('CLIENT_ORIGIN'),
+            os.getenv('CLIENT_ORIGIN_DEV'),
+        ]
+    )
 else:
     CORS_ALLOWED_ORIGIN_REGEXES = [
         r'^https://.*\.codeinstitute-ide\.net$',
