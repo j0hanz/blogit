@@ -3,7 +3,6 @@ import logging
 from django.db import IntegrityError
 from rest_framework import permissions, viewsets
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer
 
 from blogit.permissions import IsOwnerOrReadOnly
 
@@ -23,7 +22,7 @@ class FollowerViewSet(viewsets.ModelViewSet):
         IsOwnerOrReadOnly,
     ]
 
-    def perform_create(self, serializer: Serializer) -> None:
+    def perform_create(self, serializer):
         """Save the new follower instance with the current user as the owner."""
         try:
             serializer.save(owner=self.request.user)
