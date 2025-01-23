@@ -26,8 +26,8 @@ ALLOWED_HOSTS = [
     '.codeinstitute-ide.net',
 ]
 
-# CORS settings
-CORS_ALLOWED_ORIGINS = ['*']
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -42,7 +42,12 @@ else:
     ]
 
 # CSRF settings
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'https://*.gitpod.io',
+    'https://*.herokuapp.com',
+    'https://*.codeinstitute-ide.net',
+]
 
 # Application definition
 INSTALLED_APPS = [
