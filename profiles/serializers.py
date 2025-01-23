@@ -4,6 +4,21 @@ from .models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """Serializer for the Profile model.
+    This serializer handles creating and updating of profiles.
+    """
+
+    owner = serializers.ReadOnlyField(source='owner.username')
+    is_owner = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
+    posts_count = serializers.ReadOnlyField()
+    followers_count = serializers.ReadOnlyField()
+    following_count = serializers.ReadOnlyField()
+
+    def get_is_owner(self, obj):
+        request = self.context['request']
+        return request.user == obj.owner
+
     class Meta:
         model = Profile
         fields = [
@@ -11,18 +26,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'owner',
             'name',
             'bio',
-            'location',
-            'birth_date',
             'website',
             'created_at',
             'updated_at',
-            'get_age',
-            'get_full_name',
-        ]
-        read_only_fields = [
-            'owner',
-            'created_at',
-            'updated_at',
-            'get_age',
-            'get_full_name',
+            'is_owner',
         ]
