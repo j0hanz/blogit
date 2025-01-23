@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+db.sqlite3
+
+# Node.js
+node_modules/
+
+# Environment
+.env
+env.py
+
+# Core dumps
+core.*
+
+# Git
+.github/
+.ruff_cache
+
+# Static files
+/staticfiles/
