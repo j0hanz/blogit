@@ -19,6 +19,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'owner',
             'name',
             'profile_picture_url',
+            'profile_picture',
             'bio',
             'website',
             'created_at',
