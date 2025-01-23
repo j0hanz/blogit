@@ -28,7 +28,5 @@ class PostSerializer(serializers.ModelSerializer):
     def validate_content(self, value):
         if not value and not self.initial_data.get('image'):
             msg = 'You must upload an image or write some content.'
-            raise serializers.ValidationError(
-                msg
-            )
+            raise serializers.ValidationError(msg)
         return value
