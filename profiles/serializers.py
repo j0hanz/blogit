@@ -17,6 +17,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     is_following = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
