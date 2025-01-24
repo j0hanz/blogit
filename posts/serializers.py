@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from likes.models import Like
 from utils.serializers import BaseSerializer
+from utils.validators import validate_content
 
 from .models import Post
 
@@ -42,8 +43,6 @@ class PostSerializer(BaseSerializer):
         )
 
     def validate_content(self, value: str) -> str:
-        from utils.validators import validate_content
-
         return validate_content(value, self.initial_data.get('image'))
 
     class Meta:
