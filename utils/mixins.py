@@ -1,9 +1,38 @@
 import logging
 
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import DatabaseError
 from rest_framework import serializers
 
 logger = logging.getLogger(__name__)
+
+
+class ErrorHandlingMixin:
+    def perform_create(self, serializer):
+        """Save the new post instance with the current user as the owner."""
+        try:
+            serializer.save(owner=self.request.user)
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
+
+    def get_queryset(self):
+        try:
+            return super().get_queryset()
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except ObjectDoesNotExist as e:
+            logger.error(f'Object not found: {e}')
+            raise
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
 
 
 class LoggingMixin:
