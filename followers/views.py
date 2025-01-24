@@ -24,7 +24,7 @@ class FollowerViewSet(BaseViewSet):
         IsOwnerOrReadOnly,
     ]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: FollowerSerializer) -> None:
         """Save the new follower instance with the current user as the owner."""
         try:
             super().perform_create(serializer)

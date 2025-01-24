@@ -8,7 +8,9 @@ from notifications.models import Notification
 
 
 @receiver(post_save, sender=Like)
-def create_like_notification(sender, instance, created, **kwargs):
+def create_like_notification(
+    sender: type, instance: Like, created: bool, **kwargs: dict
+) -> None:
     if created:
         Notification.objects.create(
             recipient=instance.post.owner,
@@ -19,7 +21,9 @@ def create_like_notification(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Follower)
-def create_follower_notification(sender, instance, created, **kwargs):
+def create_follower_notification(
+    sender: type, instance: Follower, created: bool, **kwargs: dict
+) -> None:
     if created:
         Notification.objects.create(
             recipient=instance.followed,
@@ -30,7 +34,9 @@ def create_follower_notification(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Comment)
-def create_comment_notification(sender, instance, created, **kwargs):
+def create_comment_notification(
+    sender: type, instance: Comment, created: bool, **kwargs: dict
+) -> None:
     if created:
         Notification.objects.create(
             recipient=instance.post.owner,

@@ -30,14 +30,16 @@ class Post(models.Model):
     def __str__(self) -> str:
         return f'Post by {self.owner.username} at {self.created_at}'
 
-    def comments_count(self):
+    def comments_count(self) -> int:
         return self.comments.count()
 
-    def clean(self):
+    def clean(self) -> None:
         validate_content(self.content, self.image)
 
     @receiver(post_save, sender='posts.Post')
-    def create_post_notification(sender, instance, created, **kwargs):
+    def create_post_notification(
+        sender: type, instance: 'Post', created: bool, **kwargs: dict
+    ) -> None:
         if created:
             Notification.objects.create(
                 recipient=instance.owner,

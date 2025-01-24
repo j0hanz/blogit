@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import serializers, viewsets
 
 
 class BaseViewSet(viewsets.ModelViewSet):
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: serializers.ModelSerializer) -> None:
         serializer.save(owner=self.request.user)

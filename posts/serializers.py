@@ -18,30 +18,30 @@ class PostSerializer(BaseSerializer):
     user_has_liked = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
 
-    def get_comments_count(self, obj):
+    def get_comments_count(self, obj: Post) -> int:
         return obj.comments.count()
 
-    def get_human_readable_created_at(self, obj):
+    def get_human_readable_created_at(self, obj: Post) -> str:
         return timesince(obj.created_at)
 
-    def get_like_id(self, obj):
+    def get_like_id(self, obj: Post) -> int | None:
         user = self.context['request'].user
         if user.is_authenticated:
             like = Like.objects.filter(owner=user, post=obj).first()
             return like.id if like else None
         return None
 
-    def get_likes_count(self, obj):
+    def get_likes_count(self, obj: Post) -> int:
         return obj.likes.count()
 
-    def get_user_has_liked(self, obj):
+    def get_user_has_liked(self, obj: Post) -> bool:
         user = self.context['request'].user
         return (
             user.is_authenticated
             and Like.objects.filter(owner=user, post=obj).exists()
         )
 
-    def validate_content(self, value):
+    def validate_content(self, value: str) -> str:
         from utils.validators import validate_content
 
         return validate_content(value, self.initial_data.get('image'))

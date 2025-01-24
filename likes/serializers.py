@@ -19,7 +19,7 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = ['id', 'created_at', 'owner', 'post']
         read_only_fields = ['created_at']
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Like:
         try:
             return super().create(validated_data)
         except IntegrityError as err:

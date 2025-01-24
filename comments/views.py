@@ -23,7 +23,7 @@ class CommentViewSet(BaseViewSet):
     filterset_fields = ['post']
     pagination_class = CommentPagination
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> type:
         return (
             CommentDetailSerializer
             if self.action in ['retrieve', 'update', 'partial_update']

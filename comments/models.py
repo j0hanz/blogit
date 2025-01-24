@@ -30,5 +30,5 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return self.content[:20]
 
-    def clean(self):
+    def clean(self) -> None:
         validate_content(self.content)

@@ -8,14 +8,14 @@ User = get_user_model()
 
 
 class NotificationTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
             username='testuser', password='testpass'
         )
         self.client.force_authenticate(user=self.user)
 
-    def test_create_notification(self):
+    def test_create_notification(self) -> None:
         Notification.objects.create(
             recipient=self.user,
             actor=self.user,
@@ -26,7 +26,7 @@ class NotificationTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-    def test_mark_as_read(self):
+    def test_mark_as_read(self) -> None:
         notification = Notification.objects.create(
             recipient=self.user,
             actor=self.user,
@@ -40,7 +40,7 @@ class NotificationTests(TestCase):
         notification.refresh_from_db()
         self.assertTrue(notification.read)
 
-    def test_mark_all_as_read(self):
+    def test_mark_all_as_read(self) -> None:
         Notification.objects.create(
             recipient=self.user,
             actor=self.user,

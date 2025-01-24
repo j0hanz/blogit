@@ -21,7 +21,7 @@ class ProfileSerializer(BaseSerializer):
     following_id = serializers.SerializerMethodField()
     owner_username = serializers.ReadOnlyField(source='owner.username')
 
-    def get_following_id(self, obj):
+    def get_following_id(self, obj: Profile) -> int | None:
         user = self.context['request'].user
         if user.is_authenticated:
             following = Follower.objects.filter(
@@ -31,7 +31,7 @@ class ProfileSerializer(BaseSerializer):
             return following.id if following else None
         return None
 
-    def get_is_following(self, obj):
+    def get_is_following(self, obj: Profile) -> bool:
         user = self.context['request'].user
         return (
             user.is_authenticated
@@ -40,13 +40,13 @@ class ProfileSerializer(BaseSerializer):
             ).exists()
         )
 
-    def validate_website(self, value):
+    def validate_website(self, value: str) -> str:
         if value and not value.startswith('http'):
             msg = 'Website URL must start with http or https.'
             raise serializers.ValidationError(msg)
         return value
 
-    def validate_bio(self, value):
+    def validate_bio(self, value: str) -> str:
         if len(value) > MAX_BIO_LENGTH:
             msg = f'Bio must be {MAX_BIO_LENGTH} characters or less.'
             raise serializers.ValidationError(msg)

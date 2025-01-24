@@ -26,13 +26,15 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f"{self.owner.username}'s profile"
 
-    def post_count(self):
+    def post_count(self) -> int:
         """Return the count of posts by the owner."""
         return self.owner.posts.count()
 
 
 @receiver(post_save, sender=User)
-def create_or_update_profile(sender, instance, created, **kwargs) -> None:
+def create_or_update_profile(
+    sender: type, instance: User, created: bool, **kwargs: dict
+) -> None:
     """Create or update profile when user is created or updated."""
     if created:
         Profile.objects.create(owner=instance)
