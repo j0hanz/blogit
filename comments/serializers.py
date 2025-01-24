@@ -5,8 +5,6 @@ from utils.validators import validate_content
 
 from .models import Comment
 
-MAX_CONTENT_LENGTH = 500
-
 
 class CommentSerializer(BaseSerializer):
     """Serializer for the Comment model."""
@@ -16,6 +14,7 @@ class CommentSerializer(BaseSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
 
     def validate_content(self, value: str) -> str:
+        """Validate the content of the comment."""
         return validate_content(value)
 
     class Meta:
