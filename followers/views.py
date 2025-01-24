@@ -1,6 +1,6 @@
 import logging
 
-from django.db import IntegrityError
+from django.db import DatabaseError, IntegrityError
 from django.urls import reverse
 from rest_framework import permissions
 from rest_framework.exceptions import ValidationError
@@ -42,3 +42,6 @@ class FollowerViewSet(BaseViewSet):
                 'IntegrityError: possible duplicate follower',
             )
             raise ValidationError({'detail': 'possible duplicate'}) from err
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
