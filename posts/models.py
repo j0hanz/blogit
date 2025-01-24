@@ -36,7 +36,7 @@ class Post(models.Model):
     def clean(self):
         validate_content(self.content, self.image)
 
-    @receiver(post_save, sender='Post')
+    @receiver(post_save, sender='posts.Post')
     def create_post_notification(sender, instance, created, **kwargs):
         if created:
             Notification.objects.create(

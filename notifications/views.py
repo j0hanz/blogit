@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from blogit.permissions import IsOwnerOrReadOnly
-from blogit.serializers import NotificationSerializer
+from notifications.serializers import NotificationSerializer
 from utils.viewsets import BaseViewSet
 
 from .models import Notification
