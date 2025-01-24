@@ -1,8 +1,11 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import ProfileViewSet
+from . import views
 
-router = DefaultRouter()
-router.register(r'', ProfileViewSet, basename='profile')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('', views.ProfileList.as_view()),
+    path(
+        '<int:pk>/',
+        views.ProfileDetail.as_view(),
+    ),
+]
