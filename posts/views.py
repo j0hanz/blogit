@@ -1,14 +1,15 @@
 from django.db.models import Count
-from rest_framework import filters, viewsets
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
+from utils.viewsets import BaseViewSet
 
 from .models import Post
 from .serializers import PostSerializer
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(BaseViewSet):
     """ViewSet for Post model."""
 
     queryset = (

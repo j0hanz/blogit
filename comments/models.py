@@ -1,10 +1,10 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from posts.models import Post
 from utils.validators import validate_content
 
-MAX_CONTENT_LENGTH = 500
+User = get_user_model()
 
 
 class Comment(models.Model):
