@@ -13,7 +13,7 @@ class ProfileSerializer(BaseSerializer):
 
     post_count = serializers.IntegerField(read_only=True)
     profile_picture_url = serializers.ReadOnlyField(
-        source='profile_picture.url'
+        source='profile_picture.url',
     )
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
@@ -36,7 +36,8 @@ class ProfileSerializer(BaseSerializer):
         return (
             user.is_authenticated
             and Follower.objects.filter(
-                owner=user, followed=obj.owner
+                owner=user,
+                followed=obj.owner,
             ).exists()
         )
 
