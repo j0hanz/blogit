@@ -24,6 +24,8 @@ class CommentViewSet(BaseViewSet):
     pagination_class = CommentPagination
 
     def get_serializer_class(self):
-        if self.action in ['retrieve', 'update', 'partial_update']:
-            return CommentDetailSerializer
-        return CommentSerializer
+        return (
+            CommentDetailSerializer
+            if self.action in ['retrieve', 'update', 'partial_update']
+            else CommentSerializer
+        )

@@ -33,11 +33,12 @@ class ProfileSerializer(BaseSerializer):
 
     def get_is_following(self, obj):
         user = self.context['request'].user
-        if user.is_authenticated:
-            return Follower.objects.filter(
+        return (
+            user.is_authenticated
+            and Follower.objects.filter(
                 owner=user, followed=obj.owner
             ).exists()
-        return False
+        )
 
     def validate_website(self, value):
         if value and not value.startswith('http'):

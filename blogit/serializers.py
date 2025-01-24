@@ -8,14 +8,9 @@ logger = logging.getLogger(__name__)
 
 class CurrentUserSerializer(UserDetailsSerializer):
     profile_id = serializers.ReadOnlyField(source='profile.id')
-    profile_picture = serializers.SerializerMethodField()
-
-    def get_profile_picture(self, obj):
-        profile_picture = getattr(obj.profile, 'profile_picture', None)
-        if profile_picture:
-            return profile_picture.url
-        logger.error(f'Error retrieving profile picture for user {obj.id}')
-        return None
+    profile_picture = serializers.ReadOnlyField(
+        source='profile.profile_picture.url'
+    )
 
     class Meta(UserDetailsSerializer.Meta):
         fields = UserDetailsSerializer.Meta.fields + (

@@ -31,10 +31,9 @@ class FollowerViewSet(BaseViewSet):
             logger.info(
                 f'Follower created: {self.request.user} -> {serializer.instance.followed}'
             )
-            follow_url = reverse(
-                'follower-detail', args=[serializer.instance.id]
+            logger.info(
+                f'Follower URL: {reverse("follower-detail", args=[serializer.instance.id])}'
             )
-            logger.info(f'Follower URL: {follow_url}')
         except IntegrityError as err:
             logger.error(
                 'IntegrityError: possible duplicate follower', exc_info=True
