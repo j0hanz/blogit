@@ -29,13 +29,16 @@ class FollowerViewSet(BaseViewSet):
         try:
             super().perform_create(serializer)
             logger.info(
-                f'Follower created: {self.request.user} -> {serializer.instance.followed}'
+                'Follower created: %s -> %s',
+                self.request.user,
+                serializer.instance.followed,
             )
             logger.info(
-                f'Follower URL: {reverse("follower-detail", args=[serializer.instance.id])}'
+                'Follower URL: %s',
+                reverse('follower-detail', args=[serializer.instance.id]),
             )
         except IntegrityError as err:
-            logger.error(
-                'IntegrityError: possible duplicate follower', exc_info=True
+            logger.exception(
+                'IntegrityError: possible duplicate follower',
             )
             raise ValidationError({'detail': 'possible duplicate'}) from err
