@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils import timezone
 
 from posts.models import Post
 
@@ -15,7 +16,7 @@ class Like(models.Model):
         related_name='likes',
         on_delete=models.CASCADE,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['-created_at']

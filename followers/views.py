@@ -1,6 +1,7 @@
 import logging
 
 from django.db import IntegrityError
+from django.urls import reverse
 from rest_framework import permissions, viewsets
 from rest_framework.exceptions import ValidationError
 
@@ -29,6 +30,12 @@ class FollowerViewSet(viewsets.ModelViewSet):
             logger.info(
                 f'Follower created: {self.request.user} -> {serializer.instance.followed}'
             )
-        except IntegrityError:
-            logger.error('IntegrityError: possible duplicate follower')
-            raise ValidationError({'detail': 'possible duplicate'})
+            follow_url = reverse(
+                'follower-detail', args=[serializer.instance.id]
+            )
+            logger.info(f'Follower URL: {follow_url}')
+        except IntegrityError as err:
+            logger.error(
+                'IntegrityError: possible duplicate follower', exc_info=True
+            )
+            raise ValidationError({'detail': 'possible duplicate'}) from err
