@@ -1,7 +1,9 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from posts.models import Post
+
+User = get_user_model()
 
 
 class Like(models.Model):
