@@ -9,12 +9,13 @@ from notifications.models import Notification
 
 
 @receiver(post_migrate)
-def create_default_notifications(sender, **kwargs):
+def create_default_notifications(sender: type, **kwargs: dict) -> None:
     user, created = User.objects.get_or_create(
-        id=1, defaults={'username': 'default_user'}
+        id=1,
+        defaults={'username': 'default_user'},
     )
     if created:
-        print('Created default user with ID 1.')
+        pass
     Notification.objects.get_or_create(
         recipient=user,
         actor=user,
@@ -25,7 +26,10 @@ def create_default_notifications(sender, **kwargs):
 
 @receiver(post_save, sender=Like)
 def create_like_notification(
-    sender: type, instance: Like, created: bool, **kwargs: dict
+    sender: type,
+    instance: Like,
+    created: bool,
+    **kwargs: dict,
 ) -> None:
     if created:
         Notification.objects.create(
@@ -38,7 +42,10 @@ def create_like_notification(
 
 @receiver(post_save, sender=Follower)
 def create_follower_notification(
-    sender: type, instance: Follower, created: bool, **kwargs: dict
+    sender: type,
+    instance: Follower,
+    created: bool,
+    **kwargs: dict,
 ) -> None:
     if created:
         Notification.objects.create(
@@ -51,7 +58,10 @@ def create_follower_notification(
 
 @receiver(post_save, sender=Comment)
 def create_comment_notification(
-    sender: type, instance: Comment, created: bool, **kwargs: dict
+    sender: type,
+    instance: Comment,
+    created: bool,
+    **kwargs: dict,
 ) -> None:
     if created:
         Notification.objects.create(
