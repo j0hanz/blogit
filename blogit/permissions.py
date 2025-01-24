@@ -5,11 +5,10 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     """Custom permission to allow only owners to edit objects, while read access is unrestricted."""
 
     def has_object_permission(self, request, view, obj):
-        # Allow read-only requests
+        """Check if the request has object-level permission."""
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions only allowed for the object owner
         if hasattr(obj, 'owner'):
             return obj.owner == request.user
 
