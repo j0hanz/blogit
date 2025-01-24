@@ -19,6 +19,7 @@ urlpatterns = [
     path('followers/', include('followers.urls')),
     path('likes/', include('likes.urls')),
     path('comments/', include('comments.urls')),
+    path('notifications/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:
