@@ -137,13 +137,11 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_ALLOW_ALL = IS_DEV
 
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = ['https://*.herokuapp.com']
 if not IS_DEV:
     client_origin = os.getenv('CLIENT_ORIGIN')
     if client_origin:
         CORS_ALLOWED_ORIGINS.append(client_origin)
-
-CORS_ALLOWED_ORIGINS.append('https://*.herokuapp.com')
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.herokuapp.com',
