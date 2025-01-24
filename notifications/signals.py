@@ -1,10 +1,26 @@
-from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.db.models.signals import post_migrate, post_save
 from django.dispatch import receiver
 
 from comments.models import Comment
 from followers.models import Follower
 from likes.models import Like
 from notifications.models import Notification
+
+
+@receiver(post_migrate)
+def create_default_notifications(sender, **kwargs):
+    user, created = User.objects.get_or_create(
+        id=1, defaults={'username': 'default_user'}
+    )
+    if created:
+        print('Created default user with ID 1.')
+    Notification.objects.get_or_create(
+        recipient=user,
+        actor=user,
+        verb='default notification',
+        target='1',
+    )
 
 
 @receiver(post_save, sender=Like)
