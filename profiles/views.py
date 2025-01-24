@@ -1,3 +1,7 @@
+import logging
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import DatabaseError
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
@@ -6,6 +10,8 @@ from blogit.permissions import IsOwnerOrReadOnly
 
 from .models import Profile
 from .serializers import ProfileSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileList(generics.ListAPIView):
@@ -35,6 +41,13 @@ class ProfileList(generics.ListAPIView):
     ]
     search_fields = ['owner__username', 'name', 'bio']
 
+    def get_queryset(self):
+        try:
+            return super().get_queryset()
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
+
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     """View for retrieving, updating, and deleting profiles."""
@@ -46,3 +59,13 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
+
+    def get_object(self):
+        try:
+            return super().get_object()
+        except ObjectDoesNotExist as e:
+            logger.error(f'Profile not found: {e}')
+            raise
+        except DatabaseError as e:
+            logger.error(f'Database error: {e}')
+            raise
