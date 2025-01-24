@@ -1,16 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
+from utils.pagination import StandardResultsSetPagination
 from utils.viewsets import BaseViewSet
 
 from .models import Comment
 from .serializers import CommentDetailSerializer, CommentSerializer
-
-
-class CommentPagination(PageNumberPagination):
-    page_size = 10
 
 
 class CommentViewSet(BaseViewSet):
@@ -21,7 +17,7 @@ class CommentViewSet(BaseViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['post']
-    pagination_class = CommentPagination
+    pagination_class = StandardResultsSetPagination
 
     def get_serializer_class(self) -> type:
         return (
