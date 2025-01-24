@@ -23,7 +23,6 @@ exclude = [
     ".direnv",
     ".git",
     ".hg",
-    ".mypy_cache",
     ".nox",
     ".svn",
     ".tox",
@@ -79,7 +78,9 @@ docstring-quotes = "double"
     "F403",
     "F405",
 ]
-"tests.py" = ["F401"]
+"tests.py" = [
+    "F401",
+]
 
 [tool.ruff.format]
 quote-style = "single"
