@@ -8,5 +8,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Allow read-only requests
         if request.method in permissions.SAFE_METHODS:
             return True
+
         # Write permissions only allowed for the object owner
-        return obj.owner == request.user
+        if hasattr(obj, 'owner'):
+            return obj.owner == request.user
+
+        return False
