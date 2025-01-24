@@ -7,8 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class CurrentUserSerializer(UserDetailsSerializer):
-    """Serializer for the current authenticated user."""
-
     profile_id = serializers.ReadOnlyField(source='profile.id')
     profile_picture = serializers.SerializerMethodField()
 
