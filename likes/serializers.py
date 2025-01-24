@@ -23,7 +23,7 @@ class LikeSerializer(serializers.ModelSerializer):
         try:
             return super().create(validated_data)
         except IntegrityError as err:
-            logger.error(
-                'IntegrityError: possible duplicate like', exc_info=True
+            logger.exception(
+                'IntegrityError: possible duplicate like',
             )
             raise ValidationError({'detail': 'possible duplicate'}) from err
