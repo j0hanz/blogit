@@ -20,7 +20,7 @@ class NotificationViewSet(BaseViewSet):
 
     def get_queryset(self) -> QuerySet[Notification]:
         return Notification.objects.filter(
-            recipient=self.request.user
+            recipient=self.request.user,
         ).select_related('actor', 'recipient')
 
     @action(detail=False, methods=['post'])
