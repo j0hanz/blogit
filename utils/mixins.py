@@ -35,6 +35,26 @@ class ErrorHandlingMixin:
             raise
 
 
+class LoggingMixin:
+    def perform_create(self, serializer):
+        super().perform_create(serializer)
+        logger.info(
+            f'{self.__class__.__name__} created by {self.request.user.username}'
+        )
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        logger.info(
+            f'{self.__class__.__name__} updated by {self.request.user.username}'
+        )
+
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+        logger.info(
+            f'{self.__class__.__name__} deleted by {self.request.user.username}'
+        )
+
+
 class OwnerInfoMixin(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
