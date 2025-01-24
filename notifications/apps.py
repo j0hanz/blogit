@@ -6,7 +6,7 @@ class NotificationsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'notifications'
 
-    def ready(self):
+    def ready(self) -> None:
         from .signals import create_default_notifications
 
         post_migrate.connect(create_default_notifications, sender=self)
