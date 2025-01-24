@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -10,7 +11,11 @@ from .serializers import PostSerializer
 class PostViewSet(viewsets.ModelViewSet):
     """ViewSet for Post model."""
 
-    queryset = Post.objects.select_related('owner').order_by('-created_at')
+    queryset = (
+        Post.objects.select_related('owner')
+        .annotate(comments_count=Count('comments'))
+        .order_by('-created_at')
+    )
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 

@@ -5,6 +5,8 @@ from likes.models import Like
 
 from .models import Post
 
+MAX_CONTENT_LENGTH = 500
+
 
 class PostSerializer(serializers.ModelSerializer):
     """Serializer for Post model."""
@@ -13,7 +15,10 @@ class PostSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     user_has_liked = serializers.SerializerMethodField()
-    comments_count = serializers.ReadOnlyField()
+    comments_count = serializers.SerializerMethodField()
+
+    def get_comments_count(self, obj):
+        return obj.comments.count()
 
     def get_human_readable_created_at(self, obj):
         return timesince(obj.created_at)
