@@ -13,6 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     user_has_liked = serializers.SerializerMethodField()
+    comments_count = serializers.ReadOnlyField()
 
     def get_human_readable_created_at(self, obj):
         return timesince(obj.created_at)
@@ -53,5 +54,6 @@ class PostSerializer(serializers.ModelSerializer):
             'like_id',
             'likes_count',
             'user_has_liked',
+            'comments_count',
         ]
         read_only_fields = ['owner', 'created_at', 'updated_at']
