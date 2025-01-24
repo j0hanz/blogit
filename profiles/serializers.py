@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
 from followers.models import Follower
+from utils.serializers import BaseSerializer
 
 from .models import Profile
 
 MAX_BIO_LENGTH = 500
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(BaseSerializer):
     """Serializer for Profile model."""
 
     post_count = serializers.IntegerField(read_only=True)
@@ -19,10 +20,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     is_following = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
     owner_username = serializers.ReadOnlyField(source='owner.username')
-
-    def get_is_owner(self, obj):
-        request = self.context['request']
-        return request.user == obj.owner
 
     def get_following_id(self, obj):
         user = self.context['request'].user

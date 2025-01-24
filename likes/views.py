@@ -1,20 +1,14 @@
-from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
 from likes.models import Like
 from likes.serializers import LikeSerializer
+from utils.viewsets import BaseViewSet
 
 
-class LikeViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class LikeViewSet(BaseViewSet):
     """ViewSet for Like model."""
 
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-    def perform_create(self, serializer):
-        """Save the new like instance with the current user as the owner."""
-        serializer.save(owner=self.request.user)

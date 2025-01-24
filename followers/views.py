@@ -2,10 +2,11 @@ import logging
 
 from django.db import IntegrityError
 from django.urls import reverse
-from rest_framework import permissions, viewsets
+from rest_framework import permissions
 from rest_framework.exceptions import ValidationError
 
 from blogit.permissions import IsOwnerOrReadOnly
+from utils.viewsets import BaseViewSet
 
 from .models import Follower
 from .serializers import FollowerSerializer
@@ -13,7 +14,7 @@ from .serializers import FollowerSerializer
 logger = logging.getLogger(__name__)
 
 
-class FollowerViewSet(viewsets.ModelViewSet):
+class FollowerViewSet(BaseViewSet):
     """ViewSet for Follower model."""
 
     queryset = Follower.objects.all()
@@ -26,7 +27,7 @@ class FollowerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Save the new follower instance with the current user as the owner."""
         try:
-            serializer.save(owner=self.request.user)
+            super().perform_create(serializer)
             logger.info(
                 f'Follower created: {self.request.user} -> {serializer.instance.followed}'
             )

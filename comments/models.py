@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from posts.models import Post
+from utils.validators import validate_content
 
 MAX_CONTENT_LENGTH = 500
 
@@ -31,9 +31,4 @@ class Comment(models.Model):
         return self.content[:20]
 
     def clean(self):
-        if not self.content:
-            msg = 'Content cannot be empty.'
-            raise ValidationError(msg)
-        if len(self.content) > MAX_CONTENT_LENGTH:
-            msg = f'Content cannot exceed {MAX_CONTENT_LENGTH} characters.'
-            raise ValidationError(msg)
+        validate_content(self.content)

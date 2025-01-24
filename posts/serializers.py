@@ -2,13 +2,14 @@ from django.utils.timesince import timesince
 from rest_framework import serializers
 
 from likes.models import Like
+from utils.serializers import BaseSerializer
 
 from .models import Post
 
 MAX_CONTENT_LENGTH = 500
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(BaseSerializer):
     """Serializer for Post model."""
 
     human_readable_created_at = serializers.SerializerMethodField()
@@ -41,10 +42,9 @@ class PostSerializer(serializers.ModelSerializer):
         )
 
     def validate_content(self, value):
-        if not value and not self.initial_data.get('image'):
-            msg = 'You must upload an image or write some content.'
-            raise serializers.ValidationError(msg)
-        return value
+        from utils.validators import validate_content
+
+        return validate_content(value, self.initial_data.get('image'))
 
     class Meta:
         model = Post
