@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APIClient
@@ -11,7 +13,8 @@ class NotificationTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
-            username='testuser', password='testpass'
+            username='testuser',
+            password=os.getenv('TEST_USER_PASSWORD', 'testpass'),
         )
         self.client.force_authenticate(user=self.user)
 
@@ -34,7 +37,7 @@ class NotificationTests(TestCase):
             target='1',
         )
         response = self.client.post(
-            f'/notifications/{notification.id}/mark_as_read/'
+            f'/notifications/{notification.id}/mark_as_read/',
         )
         self.assertEqual(response.status_code, 204)
         notification.refresh_from_db()
@@ -57,7 +60,8 @@ class NotificationTests(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertTrue(
             Notification.objects.filter(
-                recipient=self.user, read=True
+                recipient=self.user,
+                read=True,
             ).count(),
             2,
         )
