@@ -16,4 +16,5 @@ class LikeViewSet(
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
+        """Save the new like instance with the current user as the owner."""
         serializer.save(owner=self.request.user)

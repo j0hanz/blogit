@@ -15,4 +15,5 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer: PostSerializer) -> None:
+        """Save the new post instance with the current user as the owner."""
         serializer.save(owner=self.request.user)
