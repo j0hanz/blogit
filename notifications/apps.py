@@ -7,6 +7,6 @@ class NotificationsConfig(AppConfig):
     name = 'notifications'
 
     def ready(self) -> None:
-        from .signals import create_default_notifications
+        from utils.signals import create_default_notifications
 
         post_migrate.connect(create_default_notifications, sender=self)
