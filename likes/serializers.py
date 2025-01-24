@@ -14,11 +14,6 @@ class LikeSerializer(serializers.ModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
 
-    class Meta:
-        model = Like
-        fields = ['id', 'created_at', 'owner', 'post']
-        read_only_fields = ['created_at']
-
     def create(self, validated_data: dict) -> Like:
         try:
             return super().create(validated_data)
@@ -27,3 +22,8 @@ class LikeSerializer(serializers.ModelSerializer):
                 'IntegrityError: possible duplicate like',
             )
             raise ValidationError({'detail': 'possible duplicate'}) from err
+
+    class Meta:
+        model = Like
+        fields = ['id', 'created_at', 'owner', 'post']
+        read_only_fields = ['created_at']
