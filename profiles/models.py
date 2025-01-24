@@ -27,6 +27,7 @@ class Profile(models.Model):
         return f"{self.owner.username}'s profile"
 
     def post_count(self):
+        """Return the count of posts by the owner."""
         return self.owner.posts.count()
 
 
