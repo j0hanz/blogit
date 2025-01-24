@@ -156,6 +156,8 @@ cloudinary.config(
     api_secret=os.getenv('CLOUDINARY_API_SECRET'),
 )
 
+STATIC_URL = '/static/'
+
 # Internationalization and Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Stockholm'
