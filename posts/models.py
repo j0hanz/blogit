@@ -39,12 +39,7 @@ class Post(models.Model):
         validate_content(self.content, self.image)
 
     @receiver(post_save, sender='posts.Post')
-    def create_post_notification(
-        self: type,
-        instance: 'Post',
-        created: bool,
-        **kwargs: dict,
-    ) -> None:
+    def create_post_notification(instance, created, **kwargs):
         if created:
             Notification.objects.create(
                 recipient=instance.owner,
