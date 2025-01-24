@@ -1,5 +1,5 @@
 from django.db.models import Count
-from rest_framework import viewsets
+from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
@@ -18,6 +18,8 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['content', 'owner__username']
 
     def perform_create(self, serializer: PostSerializer) -> None:
         """Save the new post instance with the current user as the owner."""

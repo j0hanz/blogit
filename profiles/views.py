@@ -17,7 +17,11 @@ class ProfileList(generics.ListAPIView):
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
-    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
+    filter_backends = [
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+        filters.SearchFilter,
+    ]
     filterset_fields = [
         'owner__following__followed__profile',
         'owner__followed__owner__profile',
@@ -29,6 +33,7 @@ class ProfileList(generics.ListAPIView):
         'owner__following__created_at',
         'owner__followers__created_at',
     ]
+    search_fields = ['owner__username', 'name', 'bio']
 
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
