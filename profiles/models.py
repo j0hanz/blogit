@@ -18,6 +18,8 @@ class Profile(models.Model):
         'image',
         default='nobody_nrbk5n',
         blank=True,
+        null=True,
+        help_text='Upload a profile picture',
     )
     bio = models.TextField(blank=True)
     website = models.URLField(max_length=200, blank=True)

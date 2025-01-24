@@ -20,7 +20,12 @@ class Post(models.Model):
         related_name='posts',
     )
     content = models.TextField(max_length=MAX_CONTENT_LENGTH, blank=True)
-    image = CloudinaryField('image', blank=True)
+    image = CloudinaryField(
+        'image',
+        blank=True,
+        null=True,
+        help_text='Upload an image for the post',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
