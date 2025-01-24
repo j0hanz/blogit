@@ -15,7 +15,9 @@ class Post(models.Model):
     """Blog post with image and content."""
 
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='posts'
+        User,
+        on_delete=models.CASCADE,
+        related_name='posts',
     )
     content = models.TextField(max_length=MAX_CONTENT_LENGTH, blank=True)
     image = CloudinaryField('image', blank=True)
@@ -38,7 +40,10 @@ class Post(models.Model):
 
     @receiver(post_save, sender='posts.Post')
     def create_post_notification(
-        sender: type, instance: 'Post', created: bool, **kwargs: dict
+        self: type,
+        instance: 'Post',
+        created: bool,
+        **kwargs: dict,
     ) -> None:
         if created:
             Notification.objects.create(
