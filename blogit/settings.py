@@ -106,12 +106,12 @@ if IS_DEV:
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        },
     }
 else:
     print('Using Production database')
     DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL', ''))
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL', '')),
     }
 
 # Authentication & REST Framework
