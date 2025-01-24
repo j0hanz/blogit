@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class CurrentUserSerializer(UserDetailsSerializer):
     profile_id = serializers.ReadOnlyField(source='profile.id')
     profile_picture = serializers.ReadOnlyField(
-        source='profile.profile_picture.url'
+        source='profile.profile_picture.url',
     )
 
     class Meta(UserDetailsSerializer.Meta):
