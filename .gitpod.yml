@@ -19,7 +19,6 @@ vscode:
     - esbenp.prettier-vscode
     - christian-kohler.path-intellisense
     - yzhang.markdown-all-in-one
-    - sdras.night-owl
     - matt-rudge.auto-open-preview-panel
     - formulahendry.auto-rename-tag
     - formulahendry.auto-close-tag
