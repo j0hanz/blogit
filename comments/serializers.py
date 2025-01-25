@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from gallery.serializers import ImageSerializer
 from utils.serializers import BaseSerializer
-from utils.validators import validate_content
+from utils.validation import validate_content
 
 from .models import Comment
 
