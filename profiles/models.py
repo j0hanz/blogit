@@ -32,10 +32,6 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f"{self.owner.username}'s profile"
 
-    def post_count(self) -> int:
-        """Return the count of posts by the owner."""
-        return self.owner.posts.count()
-
 
 @receiver(post_save, sender=User)
 def create_or_update_profile(
