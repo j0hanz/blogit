@@ -1,11 +1,10 @@
 import logging
 
-from django.db import DatabaseError, IntegrityError
-from django.urls import reverse
+from django.db import DatabaseError
 from rest_framework import permissions
 
 from blogit.permissions import IsOwnerOrReadOnly
-from utils.error_handling import handle_database_error, handle_integrity_error
+from utils.error_handling import handle_database_error
 from utils.mixins import ErrorHandlingMixin, LoggingMixin
 from utils.viewsets import BaseViewSet
 
@@ -25,19 +24,8 @@ class FollowerViewSet(ErrorHandlingMixin, LoggingMixin, BaseViewSet):
         IsOwnerOrReadOnly,
     ]
 
-    def perform_create(self, serializer: FollowerSerializer) -> None:
+    def perform_create(self, serializer):
         try:
-            super().perform_create(serializer)
-            logger.info(
-                'Follower created: %s -> %s',
-                self.request.user,
-                serializer.instance.followed,
-            )
-            logger.info(
-                'Follower URL: %s',
-                reverse('follower-detail', args=[serializer.instance.id]),
-            )
-        except IntegrityError as err:
-            handle_integrity_error(err)
+            serializer.save(owner=self.request.user)
         except DatabaseError as e:
             handle_database_error(e)
