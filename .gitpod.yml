@@ -7,19 +7,3 @@ tasks:
       . ${GITPOD_REPO_ROOT}/.vscode/init_tasks.sh
     command: |
       python ${GITPOD_REPO_ROOT}/.vscode/display_repo_info.py
-vscode:
-  extensions:
-    - ms-python.debugpy
-    - PKief.material-icon-theme
-    - charliermarsh.ruff
-    - ms-python.python
-    - ms-toolsai.jupyter
-    - ms-toolsai.jupyter-keymap
-    - ms-toolsai.jupyter-renderers
-    - esbenp.prettier-vscode
-    - christian-kohler.path-intellisense
-    - yzhang.markdown-all-in-one
-    - matt-rudge.auto-open-preview-panel
-    - formulahendry.auto-rename-tag
-    - formulahendry.auto-close-tag
-    - formulahendry.code-runner
