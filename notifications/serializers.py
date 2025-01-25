@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from utils.validation import validate_actor_and_recipient
+
 from .models import Notification
 
 
@@ -26,3 +28,6 @@ class NotificationSerializer(serializers.ModelSerializer):
             'read',
         ]
         read_only_fields = ['created_at']
+
+    def validate(self, data):
+        return validate_actor_and_recipient(data)
