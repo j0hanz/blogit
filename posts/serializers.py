@@ -20,6 +20,7 @@ class PostSerializer(BaseSerializer):
     user_has_liked = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     images = ImageSerializer(many=True, read_only=True, source='owner.images')
+    is_published = serializers.BooleanField(default=True)
 
     def get_comments_count(self, obj: Post) -> int:
         return obj.comments.count()
