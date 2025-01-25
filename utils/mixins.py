@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from rest_framework import serializers
 
+from utils.error_handling import handle_database_error
+
 logger = logging.getLogger(__name__)
 
 
@@ -14,15 +16,13 @@ class ErrorHandlingMixin:
         try:
             serializer.save(owner=self.request.user)
         except DatabaseError as e:
-            logger.error(f'Database error: {e}')
-            raise
+            handle_database_error(e)
 
     def get_queryset(self):
         try:
             return super().get_queryset()
         except DatabaseError as e:
-            logger.error(f'Database error: {e}')
-            raise
+            handle_database_error(e)
 
     def get_object(self):
         try:
@@ -31,8 +31,7 @@ class ErrorHandlingMixin:
             logger.error(f'Object not found: {e}')
             raise
         except DatabaseError as e:
-            logger.error(f'Database error: {e}')
-            raise
+            handle_database_error(e)
 
 
 class LoggingMixin:
