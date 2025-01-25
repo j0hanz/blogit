@@ -26,6 +26,12 @@ class Post(models.Model):
         null=True,
         help_text='Upload an image for the post',
     )
+    views = models.PositiveIntegerField(
+        default=0, help_text='Number of views for the post'
+    )
+    is_published = models.BooleanField(
+        default=True, help_text='Indicates if the post is published'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

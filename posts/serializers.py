@@ -52,6 +52,8 @@ class PostSerializer(BaseSerializer):
             'owner',
             'content',
             'image',
+            'views',
+            'is_published',
             'created_at',
             'updated_at',
             'human_readable_created_at',
