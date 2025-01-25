@@ -3,8 +3,9 @@ import logging
 from django.db import IntegrityError
 from rest_framework import serializers
 
-from likes.models import Like
 from utils.error_handling import handle_integrity_error
+
+from .models import Like
 
 logger = logging.getLogger(__name__)
 
