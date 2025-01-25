@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from gallery.serializers import ImageSerializer
 from utils.serializers import BaseSerializer
 from utils.validators import validate_content
 
@@ -12,6 +13,7 @@ class CommentSerializer(BaseSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    image = ImageSerializer(read_only=True)
 
     def validate_content(self, value: str) -> str:
         """Validate the content of the comment."""
@@ -27,6 +29,7 @@ class CommentSerializer(BaseSerializer):
             'profile_image',
             'post',
             'content',
+            'image',
             'created_at',
             'updated_at',
         ]

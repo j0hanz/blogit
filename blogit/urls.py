@@ -21,6 +21,7 @@ urlpatterns = [
     path('likes/', include('likes.urls')),
     path('comments/', include('comments.urls')),
     path('notifications/', include('notifications.urls')),
+    path('gallery/', include('gallery.urls')),
 ]
 
 if settings.DEBUG:

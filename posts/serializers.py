@@ -1,6 +1,7 @@
 from django.utils.timesince import timesince
 from rest_framework import serializers
 
+from gallery.serializers import ImageSerializer
 from likes.models import Like
 from utils.serializers import BaseSerializer
 from utils.validators import validate_content
@@ -18,6 +19,7 @@ class PostSerializer(BaseSerializer):
     likes_count = serializers.SerializerMethodField()
     user_has_liked = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
+    images = ImageSerializer(many=True, read_only=True, source='owner.images')
 
     def get_comments_count(self, obj: Post) -> int:
         return obj.comments.count()
@@ -61,5 +63,6 @@ class PostSerializer(BaseSerializer):
             'likes_count',
             'user_has_liked',
             'comments_count',
+            'images',
         ]
         read_only_fields = ['owner', 'created_at', 'updated_at']

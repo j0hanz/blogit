@@ -8,6 +8,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     actor_username = serializers.ReadOnlyField(source='actor.username')
     recipient_username = serializers.ReadOnlyField(source='recipient.username')
+    image_url = serializers.ReadOnlyField(source='image.image.url')
 
     class Meta:
         model = Notification
@@ -19,6 +20,8 @@ class NotificationSerializer(serializers.ModelSerializer):
             'recipient_username',
             'verb',
             'target',
+            'image',
+            'image_url',
             'created_at',
             'read',
         ]

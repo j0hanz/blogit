@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from followers.models import Follower
+from gallery.serializers import AlbumSerializer
 from utils.serializers import BaseSerializer
 
 from .models import Profile
@@ -20,6 +21,7 @@ class ProfileSerializer(BaseSerializer):
     is_following = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
     owner_username = serializers.ReadOnlyField(source='owner.username')
+    albums = AlbumSerializer(many=True, read_only=True, source='owner.albums')
 
     def get_following_id(self, obj: Profile) -> int | None:
         user = self.context['request'].user
@@ -69,6 +71,7 @@ class ProfileSerializer(BaseSerializer):
             'followers_count',
             'following_count',
             'is_following',
+            'albums',
             'created_at',
             'updated_at',
         ]
