@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from posts.models import Post
-from utils.validators import validate_content
 
 User = get_user_model()
 
@@ -29,6 +28,3 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return self.content[:20]
-
-    def clean(self) -> None:
-        validate_content(self.content)
