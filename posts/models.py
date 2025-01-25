@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from notifications.models import Notification
-from utils.validators import validate_content
 
 User = get_user_model()
 MAX_CONTENT_LENGTH = 500
@@ -42,12 +41,6 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return f'Post by {self.owner.username} at {self.created_at}'
-
-    def comments_count(self) -> int:
-        return self.comments.count()
-
-    def clean(self) -> None:
-        validate_content(self.content, self.image)
 
     @receiver(post_save, sender='posts.Post')
     def create_post_notification(instance, created, **kwargs):
