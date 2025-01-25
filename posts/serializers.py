@@ -4,7 +4,7 @@ from rest_framework import serializers
 from gallery.serializers import ImageSerializer
 from likes.models import Like
 from utils.serializers import BaseSerializer
-from utils.validators import validate_content
+from utils.validation import validate_content
 
 from .models import Post
 
@@ -16,9 +16,8 @@ class PostSerializer(BaseSerializer):
 
     human_readable_created_at = serializers.SerializerMethodField()
     like_id = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
-    user_has_liked = serializers.SerializerMethodField()
-    comments_count = serializers.SerializerMethodField()
+    likes_count = serializers.ReadOnlyField()
+    comments_count = serializers.ReadOnlyField()
     images = ImageSerializer(many=True, read_only=True, source='owner.images')
     is_published = serializers.BooleanField(default=True)
 
@@ -38,13 +37,6 @@ class PostSerializer(BaseSerializer):
     def get_likes_count(self, obj: Post) -> int:
         return obj.likes.count()
 
-    def get_user_has_liked(self, obj: Post) -> bool:
-        user = self.context['request'].user
-        return (
-            user.is_authenticated
-            and Like.objects.filter(owner=user, post=obj).exists()
-        )
-
     def validate_content(self, value: str) -> str:
         return validate_content(value, self.initial_data.get('image'))
 
@@ -62,7 +54,6 @@ class PostSerializer(BaseSerializer):
             'human_readable_created_at',
             'like_id',
             'likes_count',
-            'user_has_liked',
             'comments_count',
             'images',
         ]
