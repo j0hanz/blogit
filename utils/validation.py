@@ -14,9 +14,3 @@ def validate_followed_user(request_user, value):
         raise serializers.ValidationError(msg)
     return value
 
-
-def validate_like_post(request_user, value):
-    if request_user.likes.filter(post=value).exists():
-        msg = 'You have already liked this post.'
-        raise serializers.ValidationError(msg)
-    return value
