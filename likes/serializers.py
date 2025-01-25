@@ -1,10 +1,10 @@
 import logging
 
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from rest_framework import serializers
 
 from likes.models import Like
+from utils.error_handling import handle_integrity_error
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +18,7 @@ class LikeSerializer(serializers.ModelSerializer):
         try:
             return super().create(validated_data)
         except IntegrityError as err:
-            logger.exception('IntegrityError: possible duplicate like')
-            raise ValidationError({'detail': 'possible duplicate'}) from err
+            handle_integrity_error(err)
 
     class Meta:
         model = Like

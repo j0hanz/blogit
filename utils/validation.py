@@ -13,4 +13,3 @@ def validate_followed_user(request_user, value):
         msg = 'You cannot follow yourself.'
         raise serializers.ValidationError(msg)
     return value
-
