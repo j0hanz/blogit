@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from followers.models import Follower
 from gallery.serializers import AlbumSerializer
+from utils.mixins import ProfileValidationMixin
 from utils.serializers import BaseSerializer
 
 from .models import Profile
@@ -9,7 +9,7 @@ from .models import Profile
 MAX_BIO_LENGTH = 500
 
 
-class ProfileSerializer(BaseSerializer):
+class ProfileSerializer(BaseSerializer, ProfileValidationMixin):
     """Serializer for Profile model."""
 
     posts_count = serializers.IntegerField(read_only=True)
@@ -22,38 +22,6 @@ class ProfileSerializer(BaseSerializer):
     following_id = serializers.SerializerMethodField()
     owner_username = serializers.ReadOnlyField(source='owner.username')
     albums = AlbumSerializer(many=True, read_only=True, source='owner.albums')
-
-    def get_following_id(self, obj: Profile) -> int | None:
-        user = self.context['request'].user
-        if user.is_authenticated:
-            following = Follower.objects.filter(
-                owner=user,
-                followed=obj.owner,
-            ).first()
-            return following.id if following else None
-        return None
-
-    def get_is_following(self, obj: Profile) -> bool:
-        user = self.context['request'].user
-        return (
-            user.is_authenticated
-            and Follower.objects.filter(
-                owner=user,
-                followed=obj.owner,
-            ).exists()
-        )
-
-    def validate_website(self, value: str) -> str:
-        if value and not value.startswith('http'):
-            msg = 'Website URL must start with http or https.'
-            raise serializers.ValidationError(msg)
-        return value
-
-    def validate_bio(self, value: str) -> str:
-        if len(value) > MAX_BIO_LENGTH:
-            msg = f'Bio must be {MAX_BIO_LENGTH} characters or less.'
-            raise serializers.ValidationError(msg)
-        return value
 
     class Meta:
         model = Profile
