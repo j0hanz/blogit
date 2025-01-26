@@ -15,3 +15,11 @@ def annotate_post_queryset(queryset):
         .annotate(comments_count=Count('comments'))
         .order_by('-created_at')
     )
+
+
+def annotate_notification_queryset(queryset):
+    return queryset.select_related('actor', 'recipient')
+
+
+def annotate_comment_queryset(queryset):
+    return queryset.select_related('owner', 'post')

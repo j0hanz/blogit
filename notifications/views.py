@@ -7,6 +7,7 @@ from rest_framework.status import HTTP_200_OK
 
 from blogit.permissions import IsOwnerOrReadOnly
 from notifications.serializers import NotificationSerializer
+from utils.queryset import annotate_notification_queryset
 from utils.viewsets import BaseViewSet
 
 from .models import Notification
@@ -19,9 +20,11 @@ class NotificationViewSet(BaseViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self) -> QuerySet[Notification]:
-        return Notification.objects.filter(
-            recipient=self.request.user,
-        ).select_related('actor', 'recipient')
+        return annotate_notification_queryset(
+            Notification.objects.filter(
+                recipient=self.request.user,
+            )
+        )
 
     @action(detail=False, methods=['post'])
     def mark_all_as_read(self, request: Request) -> Response:
