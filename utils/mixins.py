@@ -109,8 +109,7 @@ class ProfileValidationMixin:
         user = self.context['request'].user
         if user.is_authenticated:
             following = Follower.objects.filter(
-                owner=user,
-                followed=obj.owner,
+                owner=user, followed=obj.owner
             ).first()
             return following.id if following else None
         return None
@@ -121,8 +120,7 @@ class ProfileValidationMixin:
         return (
             user.is_authenticated
             and Follower.objects.filter(
-                owner=user,
-                followed=obj.owner,
+                owner=user, followed=obj.owner
             ).exists()
         )
 
