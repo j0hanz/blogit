@@ -8,7 +8,10 @@ from rest_framework import serializers
 
 from followers.models import Follower
 from likes.models import Like
-from utils.error_handling import handle_database_error
+from utils.error_handling import (
+    handle_generic_database_error,
+    handle_object_does_not_exist_error,
+)
 from utils.validation import Validator
 
 logger = logging.getLogger(__name__)
@@ -22,22 +25,21 @@ class ErrorHandlingMixin:
         try:
             serializer.save(owner=self.request.user)
         except DatabaseError as e:
-            handle_database_error(e)
+            handle_generic_database_error(e, context='perform_create')
 
     def get_queryset(self):
         try:
             return super().get_queryset()
         except DatabaseError as e:
-            handle_database_error(e)
+            handle_generic_database_error(e, context='get_queryset')
 
     def get_object(self):
         try:
             return super().get_object()
         except ObjectDoesNotExist as e:
-            logger.error(f'Object not found: {e}')
-            raise
+            handle_object_does_not_exist_error(e)
         except DatabaseError as e:
-            handle_database_error(e)
+            handle_generic_database_error(e, context='get_object')
 
 
 class LoggingMixin:

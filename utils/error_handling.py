@@ -13,3 +13,15 @@ def handle_database_error(exception):
 def handle_integrity_error(exception):
     logger.exception('IntegrityError: possible duplicate')
     raise ValidationError({'detail': 'possible duplicate'}) from exception
+
+
+def handle_object_does_not_exist_error(exception):
+    logger.error(f'Object not found: {exception}')
+    raise ValidationError({'detail': 'Object not found'}) from exception
+
+
+def handle_generic_database_error(exception, context=''):
+    logger.error(f'Database error in {context}: {exception}')
+    raise ValidationError(
+        {'detail': f'Database error in {context}'}
+    ) from exception
