@@ -3,11 +3,17 @@ import logging
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
+from django.utils.timesince import timesince
 from rest_framework import serializers
 
+from followers.models import Follower
+from likes.models import Like
 from utils.error_handling import handle_database_error
+from utils.validation import validate_content
 
 logger = logging.getLogger(__name__)
+
+MAX_BIO_LENGTH = 500
 
 
 class ErrorHandlingMixin:
@@ -68,3 +74,58 @@ class OwnerInfoMixin(serializers.ModelSerializer):
 
     def get_updated_at(self, obj: object) -> str:
         return naturaltime(obj.updated_at)
+
+
+class ProfileValidationMixin:
+    def get_following_id(self, obj: object) -> int | None:
+        user = self.context['request'].user
+        if user.is_authenticated:
+            following = Follower.objects.filter(
+                owner=user,
+                followed=obj.owner,
+            ).first()
+            return following.id if following else None
+        return None
+
+    def get_is_following(self, obj: object) -> bool:
+        user = self.context['request'].user
+        return (
+            user.is_authenticated
+            and Follower.objects.filter(
+                owner=user,
+                followed=obj.owner,
+            ).exists()
+        )
+
+    def validate_website(self, value: str) -> str:
+        if value and not value.startswith('http'):
+            msg = 'Website URL must start with http or https.'
+            raise serializers.ValidationError(msg)
+        return value
+
+    def validate_bio(self, value: str) -> str:
+        if len(value) > MAX_BIO_LENGTH:
+            msg = f'Bio must be {MAX_BIO_LENGTH} characters or less.'
+            raise serializers.ValidationError(msg)
+        return value
+
+
+class PostValidationMixin:
+    def get_comments_count(self, obj: object) -> int:
+        return obj.comments.count()
+
+    def get_human_readable_created_at(self, obj: object) -> str:
+        return timesince(obj.created_at)
+
+    def get_like_id(self, obj: object) -> int | None:
+        user = self.context['request'].user
+        if user.is_authenticated:
+            like = Like.objects.filter(owner=user, post=obj).first()
+            return like.id if like else None
+        return None
+
+    def get_likes_count(self, obj: object) -> int:
+        return obj.likes.count()
+
+    def validate_content(self, value: str) -> str:
+        return validate_content(value, self.initial_data.get('image'))
