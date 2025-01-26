@@ -5,12 +5,14 @@ from rest_framework import serializers, viewsets
 from rest_framework.response import Response
 
 from utils.error_handling import ErrorHandler
+from utils.mixins import DestroyMixin
 
 logger = logging.getLogger(__name__)
 
 
-class BaseViewSet(viewsets.ModelViewSet):
+class BaseViewSet(DestroyMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer: serializers.ModelSerializer) -> None:
+        """Create a new instance."""
         try:
             serializer.save(owner=self.request.user)
             self.log_action('create', serializer.instance)
@@ -20,6 +22,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             ErrorHandler.handle_database_error(e)
 
     def perform_update(self, serializer: serializers.ModelSerializer) -> None:
+        """Update an existing instance."""
         try:
             serializer.save()
             self.log_action('update', serializer.instance)
@@ -28,14 +31,8 @@ class BaseViewSet(viewsets.ModelViewSet):
         except DatabaseError as e:
             ErrorHandler.handle_database_error(e)
 
-    def perform_destroy(self, instance: serializers.ModelSerializer) -> None:
-        try:
-            instance.delete()
-            self.log_action('delete', instance)
-        except DatabaseError as e:
-            ErrorHandler.handle_database_error(e)
-
     def retrieve(self, request, *args, **kwargs):
+        """Retrieve a single instance."""
         try:
             instance = self.get_object()
             self.log_action('retrieve', instance)
@@ -45,6 +42,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             ErrorHandler.handle_database_error(e)
 
     def list(self, request, *args, **kwargs):
+        """List all instances."""
         try:
             queryset = self.filter_queryset(self.get_queryset())
             page = self.paginate_queryset(queryset)
@@ -59,6 +57,7 @@ class BaseViewSet(viewsets.ModelViewSet):
     def log_action(
         self, action: str, instance: serializers.ModelSerializer
     ) -> None:
+        """Log an action performed on an instance."""
         logger.info(
             f'{self.__class__.__name__} {action} by {self.request.user.username}: {instance}'
         )
