@@ -4,4 +4,4 @@ from utils.mixins import OwnerInfoMixin
 
 
 class BaseSerializer(OwnerInfoMixin, serializers.ModelSerializer):
-    pass
+    """Base serializer with owner info mixin."""

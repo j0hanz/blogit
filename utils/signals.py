@@ -10,6 +10,7 @@ from notifications.models import Notification
 
 @receiver(post_migrate)
 def create_default_notifications(sender: type, **kwargs: dict) -> None:
+    """Create default notifications after migration."""
     user, created = User.objects.get_or_create(
         id=1,
         defaults={'username': 'default_user'},
@@ -31,6 +32,7 @@ def create_like_notification(
     created: bool,
     **kwargs: dict,
 ) -> None:
+    """Create a notification when a post is liked."""
     if created:
         Notification.objects.create(
             recipient=instance.post.owner,
@@ -47,6 +49,7 @@ def create_follower_notification(
     created: bool,
     **kwargs: dict,
 ) -> None:
+    """Create a notification when a user is followed."""
     if created:
         Notification.objects.create(
             recipient=instance.followed,
@@ -63,6 +66,7 @@ def create_comment_notification(
     created: bool,
     **kwargs: dict,
 ) -> None:
+    """Create a notification when a comment is made."""
     if created:
         Notification.objects.create(
             recipient=instance.post.owner,
