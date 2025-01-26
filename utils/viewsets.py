@@ -4,7 +4,7 @@ from django.db import DatabaseError, IntegrityError
 from rest_framework import serializers, viewsets
 from rest_framework.response import Response
 
-from utils.error_handling import handle_database_error, handle_integrity_error
+from utils.error_handling import ErrorHandler
 
 logger = logging.getLogger(__name__)
 
@@ -15,25 +15,25 @@ class BaseViewSet(viewsets.ModelViewSet):
             serializer.save(owner=self.request.user)
             self.log_action('create', serializer.instance)
         except IntegrityError as e:
-            handle_integrity_error(e)
+            ErrorHandler.handle_integrity_error(e)
         except DatabaseError as e:
-            handle_database_error(e)
+            ErrorHandler.handle_database_error(e)
 
     def perform_update(self, serializer: serializers.ModelSerializer) -> None:
         try:
             serializer.save()
             self.log_action('update', serializer.instance)
         except IntegrityError as e:
-            handle_integrity_error(e)
+            ErrorHandler.handle_integrity_error(e)
         except DatabaseError as e:
-            handle_database_error(e)
+            ErrorHandler.handle_database_error(e)
 
     def perform_destroy(self, instance: serializers.ModelSerializer) -> None:
         try:
             instance.delete()
             self.log_action('delete', instance)
         except DatabaseError as e:
-            handle_database_error(e)
+            ErrorHandler.handle_database_error(e)
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -42,7 +42,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
         except DatabaseError as e:
-            handle_database_error(e)
+            ErrorHandler.handle_database_error(e)
 
     def list(self, request, *args, **kwargs):
         try:
@@ -54,7 +54,7 @@ class BaseViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
         except DatabaseError as e:
-            handle_database_error(e)
+            ErrorHandler.handle_database_error(e)
 
     def log_action(
         self, action: str, instance: serializers.ModelSerializer

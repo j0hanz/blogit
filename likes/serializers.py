@@ -3,7 +3,7 @@ import logging
 from django.db import IntegrityError
 from rest_framework import serializers
 
-from utils.error_handling import handle_integrity_error
+from utils.error_handling import ErrorHandler
 
 from .models import Like
 
@@ -19,7 +19,7 @@ class LikeSerializer(serializers.ModelSerializer):
         try:
             return super().create(validated_data)
         except IntegrityError as err:
-            handle_integrity_error(err)
+            ErrorHandler.handle_integrity_error(err)
 
     class Meta:
         model = Like

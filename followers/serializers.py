@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from rest_framework import serializers
 
-from utils.error_handling import handle_integrity_error
+from utils.error_handling import ErrorHandler
 from utils.validation import Validator
 
 from .models import Follower
@@ -21,7 +21,7 @@ class FollowerSerializer(serializers.ModelSerializer):
         try:
             return super().create(validated_data)
         except IntegrityError as err:
-            handle_integrity_error(err)
+            ErrorHandler.handle_integrity_error(err)
 
     def validate_followed(self, value):
         request_user = self.context['request'].user
