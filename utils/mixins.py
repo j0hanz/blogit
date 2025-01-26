@@ -9,7 +9,7 @@ from rest_framework import serializers
 from followers.models import Follower
 from likes.models import Like
 from utils.error_handling import handle_database_error
-from utils.validation import validate_content
+from utils.validation import Validator
 
 logger = logging.getLogger(__name__)
 
@@ -128,4 +128,6 @@ class PostValidationMixin:
         return obj.likes.count()
 
     def validate_content(self, value: str) -> str:
-        return validate_content(value, self.initial_data.get('image'))
+        return Validator.validate_content(
+            value, self.initial_data.get('image')
+        )

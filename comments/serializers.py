@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from gallery.serializers import ImageSerializer
 from utils.serializers import BaseSerializer
-from utils.validation import validate_content
+from utils.validation import Validator
 
 from .models import Comment
 
@@ -17,7 +17,7 @@ class CommentSerializer(BaseSerializer):
 
     def validate_content(self, value: str) -> str:
         """Validate the content of the comment."""
-        return validate_content(value)
+        return Validator.validate_content(value)
 
     class Meta:
         model = Comment

@@ -2,7 +2,7 @@ from django.db import IntegrityError
 from rest_framework import serializers
 
 from utils.error_handling import handle_integrity_error
-from utils.validation import validate_followed_user
+from utils.validation import Validator
 
 from .models import Follower
 
@@ -25,4 +25,4 @@ class FollowerSerializer(serializers.ModelSerializer):
 
     def validate_followed(self, value):
         request_user = self.context['request'].user
-        return validate_followed_user(request_user, value)
+        return Validator.validate_followed_user(request_user, value)
