@@ -4,7 +4,6 @@ from rest_framework import filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
-from utils.mixins import ErrorHandlingMixin, LoggingMixin
 from utils.queryset import annotate_post_queryset
 from utils.viewsets import BaseViewSet
 
@@ -14,7 +13,7 @@ from .serializers import PostSerializer
 logger = logging.getLogger(__name__)
 
 
-class PostViewSet(ErrorHandlingMixin, LoggingMixin, BaseViewSet):
+class PostViewSet(BaseViewSet):
     """ViewSet for Post model."""
 
     queryset = annotate_post_queryset(Post.objects.all())

@@ -4,7 +4,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from blogit.permissions import IsOwnerOrReadOnly
-from utils.mixins import ErrorHandlingMixin, LoggingMixin
 from utils.pagination import StandardResultsSetPagination
 from utils.viewsets import BaseViewSet
 
@@ -14,7 +13,7 @@ from .serializers import CommentDetailSerializer, CommentSerializer
 logger = logging.getLogger(__name__)
 
 
-class CommentViewSet(ErrorHandlingMixin, LoggingMixin, BaseViewSet):
+class CommentViewSet(BaseViewSet):
     """ViewSet for Comment model."""
 
     queryset = Comment.objects.select_related('owner', 'post').all()
