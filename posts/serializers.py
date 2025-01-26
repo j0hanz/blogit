@@ -1,17 +1,15 @@
-from django.utils.timesince import timesince
 from rest_framework import serializers
 
 from gallery.serializers import ImageSerializer
-from likes.models import Like
+from utils.mixins import PostValidationMixin
 from utils.serializers import BaseSerializer
-from utils.validation import validate_content
 
 from .models import Post
 
 MAX_CONTENT_LENGTH = 500
 
 
-class PostSerializer(BaseSerializer):
+class PostSerializer(BaseSerializer, PostValidationMixin):
     """Serializer for Post model."""
 
     human_readable_created_at = serializers.SerializerMethodField()
@@ -20,25 +18,6 @@ class PostSerializer(BaseSerializer):
     comments_count = serializers.ReadOnlyField()
     images = ImageSerializer(many=True, read_only=True, source='owner.images')
     is_published = serializers.BooleanField(default=True)
-
-    def get_comments_count(self, obj: Post) -> int:
-        return obj.comments.count()
-
-    def get_human_readable_created_at(self, obj: Post) -> str:
-        return timesince(obj.created_at)
-
-    def get_like_id(self, obj: Post) -> int | None:
-        user = self.context['request'].user
-        if user.is_authenticated:
-            like = Like.objects.filter(owner=user, post=obj).first()
-            return like.id if like else None
-        return None
-
-    def get_likes_count(self, obj: Post) -> int:
-        return obj.likes.count()
-
-    def validate_content(self, value: str) -> str:
-        return validate_content(value, self.initial_data.get('image'))
 
     class Meta:
         model = Post
