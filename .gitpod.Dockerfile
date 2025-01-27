@@ -3,28 +3,26 @@ FROM gitpod/workspace-base
 # Environment variables
 ENV PYENV_ROOT="/home/gitpod/.pyenv"
 ENV PATH="$PYENV_ROOT/bin:$PATH:$PYENV_ROOT/shims"
-ENV NODE_VERSION=20.18.1
+ENV NODE_VERSION=22.13.0
 ENV NVM_DIR="/home/gitpod/.nvm"
 ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 ENV PGDATA="/workspace/.pgsql/data"
 ENV PYTHON_VERSION=3.12.8
-ENV PYTHON_VERSION_13=3.13.1
 
-# Update and install common dependencies
+# Update and install common dependencies and essential development tools
 RUN sudo apt-get update && sudo apt-get upgrade -y && \
-    sudo apt-get install -y curl wget gnupg software-properties-common build-essential libpq-dev libssl-dev libffi-dev zlib1g-dev graphviz unzip && \
+    sudo apt-get install -y --no-install-recommends \
+    curl wget gnupg software-properties-common \
+    build-essential libssl-dev libffi-dev zlib1g-dev graphviz && \
     sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 
 # Node.js setup
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
-    export NVM_DIR="$HOME/.nvm" && \
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    . "$NVM_DIR/nvm.sh" && \
     nvm install $NODE_VERSION && \
     nvm use $NODE_VERSION && \
-    npm install -g npm@latest pnpm@latest typescript yarn node-gyp eslint prettier node-ovsx-sign && \
-    echo "export NVM_DIR=\"$HOME/.nvm\"" >> /home/gitpod/.bashrc && \
-    echo "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"" >> /home/gitpod/.bashrc && \
-    echo "[ -s \"$NVM_DIR/bash_completion\" ] && \. \"$NVM_DIR/bash_completion\"" >> /home/gitpod/.bashrc
+    npm install -g npm@latest pnpm@latest typescript yarn node-gyp && \
+    echo "source $NVM_DIR/nvm.sh" >> /home/gitpod/.bashrc
 
 # Python setup
 RUN curl -fsSL https://pyenv.run | bash && \
@@ -33,7 +31,6 @@ RUN curl -fsSL https://pyenv.run | bash && \
     echo 'eval "$(pyenv init --path)"' >> ~/.bashrc && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc && \
     pyenv install $PYTHON_VERSION && \
-    pyenv install $PYTHON_VERSION_13 && \
     pyenv global $PYTHON_VERSION && \
     pip install --no-cache-dir pip && \
     pip install --no-cache-dir --upgrade pip setuptools wheel && \
