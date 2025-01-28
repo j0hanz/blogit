@@ -42,14 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'allauth.socialaccount',
     'corsheaders',
     'django_filters',
     'debug_toolbar',
     'django_extensions',
-    'drf_yasg',
-    'rest_framework_simplejwt',
     'profiles',
     'posts',
     'followers',
@@ -58,8 +56,6 @@ INSTALLED_APPS = [
     'notifications',
     'gallery',
 ]
-
-SITE_ID = 1
 
 # Middleware
 MIDDLEWARE = [
@@ -75,13 +71,8 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
-
 ROOT_URLCONF = 'blogit.urls'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -115,41 +106,6 @@ else:
         'default': dj_database_url.parse(os.getenv('DATABASE_URL', '')),
     }
 
-# Authentication & REST Framework
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DATETIME_FORMAT': '%a %d-%m-%Y %H:%M',
-}
-
-REST_AUTH = {
-    'USE_JWT': False,
-    'USER_DETAILS_SERIALIZER': 'blogit.serializers.CurrentUserSerializer',
-}
-
-# CORS and CSRF
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ALLOWED_ORIGINS = ['https://*.herokuapp.com']
-if not IS_DEV:
-    client_origin = os.getenv('CLIENT_ORIGIN')
-    if client_origin:
-        CORS_ALLOWED_ORIGINS.append(client_origin)
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.herokuapp.com',
-]
-
 # Cloudinary Configuration
 cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -157,13 +113,39 @@ cloudinary.config(
     api_secret=os.getenv('CLOUDINARY_API_SECRET'),
 )
 
-STATIC_URL = '/static/'
+# Authentication & REST Framework
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'blogit-token',
+    'JWT_AUTH_REFRESH_COOKIE': 'blogit-refresh-token',
+    'USER_DETAILS_SERIALIZER': 'blogit.serializers.CurrentUserSerializer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ]
+}
+
+SITE_ID = 1
+
+# CORS
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Internationalization and Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Stockholm'
 USE_I18N = True
 USE_TZ = True
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+STATIC_URL = '/static/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
