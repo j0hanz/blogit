@@ -1,7 +1,7 @@
-import './App.css';
+import SignIn from '@/components/auth/signIn';
 
 function App() {
-  return <>BlogIt</>;
+  return <SignIn />;
 }
 
 export default App;

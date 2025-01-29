@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { axiosReq } from '../services/api';
+import { axiosReq } from '@/services/api';
 
 // AuthContext type defining the context structure
 interface AuthContextType {
