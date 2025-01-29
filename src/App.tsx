@@ -1,13 +1,10 @@
 import '@/App.css';
-import Card from '@/components/Card';
+import ProfilePage from '@/components/ProfilePage';
 
 function App() {
   return (
     <div className="App">
-      <Card
-        title="Sample Card"
-        text="This is a sample card."
-      />
+      <ProfilePage />
     </div>
   );
 }

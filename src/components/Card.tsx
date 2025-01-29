@@ -1,20 +1,45 @@
 import React from 'react';
 import { Card as CustomCard } from 'react-bootstrap';
+import styles from './Card.module.css';
 
-interface CardProps {
-  title: string;
-  text: string;
+interface ProfileCardProps {
+  ownerUsername: string;
+  name: string;
+  profilePictureUrl: string;
+  bio: string;
+  website: string;
 }
 
-const Card: React.FC<CardProps> = ({ title, text }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({
+  ownerUsername,
+  name,
+  profilePictureUrl,
+  bio,
+  website,
+}) => {
   return (
-    <CustomCard>
+    <CustomCard className={styles.profileCard}>
+      <CustomCard.Img
+        variant="top"
+        className="rounded-circle"
+        src={profilePictureUrl}
+        alt={`${ownerUsername}'s profile picture`}
+      />
       <CustomCard.Body>
-        <CustomCard.Title>{title}</CustomCard.Title>
-        <CustomCard.Text>{text}</CustomCard.Text>
+        <CustomCard.Title>{name || ownerUsername}</CustomCard.Title>
+        <CustomCard.Text>{bio}</CustomCard.Text>
+        {website && (
+          <CustomCard.Link
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {website}
+          </CustomCard.Link>
+        )}
       </CustomCard.Body>
     </CustomCard>
   );
 };
 
-export default Card;
+export default ProfileCard;
