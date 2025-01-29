@@ -1,6 +1,5 @@
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
 from blogit.permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.viewsets import BaseViewSet
 
 from .models import Album, Image

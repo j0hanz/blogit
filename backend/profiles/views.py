@@ -1,9 +1,8 @@
 import logging
 
+from blogit.permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
-
-from blogit.permissions import IsOwnerOrReadOnly
 from utils.mixins import ErrorHandlingMixin
 from utils.queryset import annotate_profile_queryset
 

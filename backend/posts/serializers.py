@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from gallery.serializers import ImageSerializer
+from rest_framework import serializers
 from utils.mixins import PostValidationMixin
 from utils.serializers import BaseSerializer
 

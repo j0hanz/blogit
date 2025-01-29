@@ -4,10 +4,9 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 from django.utils.timesince import timesince
-from rest_framework import serializers
-
 from followers.models import Follower
 from likes.models import Like
+from rest_framework import serializers
 from utils.error_handling import ErrorHandler
 from utils.validation import Validator
 

@@ -1,8 +1,7 @@
 import logging
 
-from rest_framework import permissions
-
 from blogit.permissions import IsOwnerOrReadOnly
+from rest_framework import permissions
 from utils.viewsets import BaseViewSet
 
 from .models import Follower

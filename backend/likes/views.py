@@ -1,9 +1,9 @@
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
 from blogit.permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from utils.viewsets import BaseViewSet
+
 from likes.models import Like
 from likes.serializers import LikeSerializer
-from utils.viewsets import BaseViewSet
 
 
 class LikeViewSet(BaseViewSet):

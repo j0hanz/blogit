@@ -1,8 +1,7 @@
+from comments.models import Comment
 from django.contrib.auth.models import User
 from django.db.models.signals import post_migrate, post_save
 from django.dispatch import receiver
-
-from comments.models import Comment
 from followers.models import Follower
 from likes.models import Like
 from notifications.models import Notification

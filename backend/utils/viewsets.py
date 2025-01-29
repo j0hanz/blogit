@@ -3,7 +3,6 @@ import logging
 from django.db import DatabaseError, IntegrityError
 from rest_framework import serializers, viewsets
 from rest_framework.response import Response
-
 from utils.error_handling import ErrorHandler
 from utils.mixins import DestroyMixin
 

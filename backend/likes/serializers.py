@@ -2,7 +2,6 @@ import logging
 
 from django.db import IntegrityError
 from rest_framework import serializers
-
 from utils.error_handling import ErrorHandler
 
 from .models import Like

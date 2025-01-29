@@ -1,9 +1,8 @@
 import logging
 
+from blogit.permissions import IsOwnerOrReadOnly
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-from blogit.permissions import IsOwnerOrReadOnly
 from utils.queryset import annotate_post_queryset
 from utils.viewsets import BaseViewSet
 

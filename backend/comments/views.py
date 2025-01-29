@@ -1,9 +1,8 @@
 import logging
 
+from blogit.permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-from blogit.permissions import IsOwnerOrReadOnly
 from utils.pagination import StandardResultsSetPagination
 from utils.queryset import annotate_comment_queryset
 from utils.viewsets import BaseViewSet

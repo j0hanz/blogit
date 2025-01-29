@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from utils.validation import Validator
 
 from .models import Notification

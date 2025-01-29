@@ -1,14 +1,14 @@
+from blogit.permissions import IsOwnerOrReadOnly
 from django.db.models import QuerySet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
-
-from blogit.permissions import IsOwnerOrReadOnly
-from notifications.serializers import NotificationSerializer
 from utils.queryset import annotate_notification_queryset
 from utils.viewsets import BaseViewSet
+
+from notifications.serializers import NotificationSerializer
 
 from .models import Notification
 
